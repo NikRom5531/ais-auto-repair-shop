@@ -9,8 +9,12 @@ import java.util.List;
 
 public interface EmployeeController {
     ResponseEntity<Employee> createEmployee(@RequestBody EmployeeDto request);
+
     ResponseEntity<Employee> getEmployeeById(@RequestBody EmployeeDto request);
-    List<Employee> getAllEmployees();
+
+    ResponseEntity<List<Employee>> getAllEmployees();
+
     ResponseEntity<Employee> updateEmployee(@RequestBody EmployeeDto request);
+
     ResponseEntity<Void> deleteEmployee(@RequestBody EmployeeDto request);
 }

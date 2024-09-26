@@ -10,5 +10,6 @@ import java.util.UUID;
 @Repository
 public interface OperationRepository extends JpaRepository<Operation, UUID> {
     List<Operation> findAllByOrderUid(UUID OrderUid);
+
     List<Operation> findAllByEmployeeUid(UUID EmployeeUid);
 }

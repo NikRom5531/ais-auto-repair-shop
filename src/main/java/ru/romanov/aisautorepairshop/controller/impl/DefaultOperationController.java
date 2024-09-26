@@ -15,7 +15,6 @@ import ru.romanov.aisautorepairshop.service.OperationService;
 
 import java.util.List;
 
-
 @AllArgsConstructor
 @RestController
 @RequestMapping("/operations")
@@ -36,20 +35,23 @@ public class DefaultOperationController implements OperationController {
 
     @Override
     @GetMapping("/all")
-    public List<Operation> getAllOperations() {
-        return operationService.getAllOperations();
+    public ResponseEntity<List<Operation>> getAllOperations() {
+        List<Operation> operations = operationService.getAllOperations();
+        return ResponseEntity.status(operations.isEmpty() ? 204 : 200).body(operations);
     }
 
     @Override
     @GetMapping("/order")
-    public List<Operation> getAllOperationsByOrderId(OperationDto request) {
-        return operationService.getAllOperationsByOrderId(request.getUid());
+    public ResponseEntity<List<Operation>> getAllOperationsByOrderId(OperationDto request) {
+        List<Operation> operations = operationService.getAllOperationsByOrderId(request.getUid());
+        return ResponseEntity.status(operations.isEmpty() ? 204 : 200).body(operations);
     }
 
     @Override
     @GetMapping("/employee")
-    public List<Operation> getAllOperationsByEmployeeId(OperationDto request) {
-        return operationService.getAllOperationsByEmployeeId(request.getUid());
+    public ResponseEntity<List<Operation>> getAllOperationsByEmployeeId(OperationDto request) {
+        List<Operation> operations = operationService.getAllOperationsByEmployeeId(request.getUid());
+        return ResponseEntity.status(operations.isEmpty() ? 204 : 200).body(operations);
     }
 
     @Override

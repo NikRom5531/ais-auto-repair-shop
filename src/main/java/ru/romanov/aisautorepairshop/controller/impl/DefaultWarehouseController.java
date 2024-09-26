@@ -20,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/warehouse")
-public class DefaultWarehouseController implements WarehouseController { //
+public class DefaultWarehouseController implements WarehouseController {
     private final WarehouseService warehouseService;
 
     @Override

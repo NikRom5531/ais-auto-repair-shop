@@ -48,7 +48,7 @@ public class DefaultOrderService implements OrderService {
     @Override
     public Order changeOrderStatus(UUID uid, OrderStatusEnum status) {
         Order existingOrder = getOrderById(uid);
-        if(!existingOrder.getStatus().equals(status)) existingOrder.setStatus(status);
+        if (!existingOrder.getStatus().equals(status)) existingOrder.setStatus(status);
         return orderRepository.save(existingOrder);
     }
 

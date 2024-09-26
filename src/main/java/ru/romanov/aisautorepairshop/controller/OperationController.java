@@ -12,11 +12,11 @@ public interface OperationController {
 
     ResponseEntity<Operation> getOperationById(@RequestBody OperationDto request);
 
-    List<Operation> getAllOperations();
+    ResponseEntity<List<Operation>> getAllOperations();
 
-    List<Operation> getAllOperationsByOrderId(@RequestBody OperationDto request);
+    ResponseEntity<List<Operation>> getAllOperationsByOrderId(@RequestBody OperationDto request);
 
-    List<Operation> getAllOperationsByEmployeeId(@RequestBody OperationDto request);
+    ResponseEntity<List<Operation>> getAllOperationsByEmployeeId(@RequestBody OperationDto request);
 
     ResponseEntity<Operation> finishedOperation(@RequestBody OperationDto request);
 

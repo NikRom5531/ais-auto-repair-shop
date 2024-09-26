@@ -30,8 +30,9 @@ public class DefaultEmployeeController implements EmployeeController {
 
     @Override
     @GetMapping
-    public List<Employee> getAllEmployees() {
-        return employeeService.getAllEmployees();
+    public ResponseEntity<List<Employee>> getAllEmployees() {
+        List<Employee> employees = employeeService.getAllEmployees();
+        return ResponseEntity.status(employees.isEmpty() ? 204 : 200).body(employees);
     }
 
     @Override

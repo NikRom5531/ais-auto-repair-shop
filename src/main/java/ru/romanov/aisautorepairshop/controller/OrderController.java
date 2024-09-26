@@ -10,9 +10,14 @@ import java.util.List;
 
 public interface OrderController {
     ResponseEntity<Order> createOrder(@RequestBody OrderDto orderDto);
+
     ResponseEntity<Order> getOrderById(@RequestBody OrderDto orderDto);
+
     ResponseEntity<List<Order>> getAllOrders();
+
     ResponseEntity<List<Order>> getOrdersByStatus(@RequestBody OrderDto orderDto);
+
     ResponseEntity<Order> changeOrderStatus(@RequestBody OrderDto orderDto);
+
     ResponseEntity<Void> deleteOrder(@RequestBody OrderDto orderDto);
 }

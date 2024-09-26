@@ -5,9 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class AisAutoRepairShopApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(AisAutoRepairShopApplication.class, args);
     }
-
 }
