@@ -1,13 +1,13 @@
 package ru.romanov.aisautorepairshop.service;
 
+import ru.romanov.aisautorepairshop.model.dto.OperationDto;
 import ru.romanov.aisautorepairshop.model.entity.Operation;
-import ru.romanov.aisautorepairshop.web.payload.OperationPayload;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface OperationService {
-    Operation createOperation(OperationPayload payload);
+    Operation createOperation(OperationDto operationDto);
 
     Operation getOperationById(UUID uid);
 

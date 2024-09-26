@@ -2,8 +2,8 @@ package ru.romanov.aisautorepairshop.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.romanov.aisautorepairshop.exception.EmployeeNotFoundException;
-import ru.romanov.aisautorepairshop.web.payload.EmployeePayload;
+import ru.romanov.aisautorepairshop.exceptions.EmployeeNotFoundException;
+import ru.romanov.aisautorepairshop.model.dto.EmployeeDto;
 import ru.romanov.aisautorepairshop.model.entity.Employee;
 import ru.romanov.aisautorepairshop.repository.EmployeeRepository;
 import ru.romanov.aisautorepairshop.service.EmployeeService;
@@ -17,12 +17,12 @@ public class DefaultEmployeeService implements EmployeeService {
     private final EmployeeRepository employeeRepository;
 
     @Override
-    public Employee createEmployee(EmployeePayload payload) {
+    public Employee createEmployee(EmployeeDto employeeDto) {
         return employeeRepository.save(
                 Employee.builder()
-                        .firstName(payload.getFirstName())
-                        .lastName(payload.getLastName())
-                        .position(payload.getPosition())
+                        .firstName(employeeDto.getFirstName())
+                        .lastName(employeeDto.getLastName())
+                        .position(employeeDto.getPosition())
                         .build());
     }
 

@@ -1,15 +1,15 @@
 package ru.romanov.aisautorepairshop.service;
 
+import ru.romanov.aisautorepairshop.model.dto.OrderDto;
 import ru.romanov.aisautorepairshop.model.entity.Order;
 import ru.romanov.aisautorepairshop.model.enums.OrderStatusEnum;
-import ru.romanov.aisautorepairshop.web.payload.OrderPayload;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface OrderService {
     // Метод для создания нового заказа
-    Order createOrder(OrderPayload payload);
+    Order createOrder(OrderDto orderDto);
 
     // Метод для получения заказа по ID
     Order getOrderById(UUID orderId);

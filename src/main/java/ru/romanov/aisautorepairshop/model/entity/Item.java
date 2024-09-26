@@ -28,4 +28,7 @@ public class Item {
 
     @Column(name = "part_name", nullable = false)
     private String partName;
+
+//    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+//    private List<Warehouse> warehouses = new ArrayList<>();
 }

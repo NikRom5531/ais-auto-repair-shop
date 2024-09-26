@@ -5,7 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ru.romanov.aisautorepairshop.model.enums.OrderStatusEnum;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -16,7 +18,7 @@ import java.util.UUID;
 public class OrderDto {
     private UUID uid;
     private String customerName;
-    private String status;
-    private String created;
+    private OrderStatusEnum status;
+    private LocalDateTime created;
     private String description;
 }

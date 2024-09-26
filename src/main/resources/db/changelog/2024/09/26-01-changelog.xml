@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1727359400956-1" author="Romanov (generated)">
+        <createTable tableName="employee">
+            <column name="uid" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_employee"/>
+            </column>
+            <column name="first_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="position" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1727359400956-2" author="Romanov (generated)">
+        <createTable tableName="inventory_requirement">
+            <column name="uid" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_inventory_requirement"/>
+            </column>
+            <column name="operation_uid" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="item_uid" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1727359400956-3" author="Romanov (generated)">
+        <createTable tableName="items">
+            <column name="uid" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_items"/>
+            </column>
+            <column name="part_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1727359400956-4" author="Romanov (generated)">
+        <createTable tableName="operation">
+            <column name="uid" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_operation"/>
+            </column>
+            <column name="description" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="started" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="finished" type="TIMESTAMP"/>
+            <column name="order_uid" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="employee_uid" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1727359400956-5" author="Romanov (generated)">
+        <createTable tableName="orders">
+            <column name="uid" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_orders"/>
+            </column>
+            <column name="customer_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1727359400956-6" author="Romanov (generated)">
+        <createTable tableName="warehouse">
+            <column name="uid" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_warehouse"/>
+            </column>
+            <column name="item_uid" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1727359400956-7" author="Romanov (generated)">
+        <addForeignKeyConstraint baseColumnNames="item_uid" baseTableName="inventory_requirement"
+                                 constraintName="FK_INVENTORY_REQUIREMENT_ON_ITEM_UID" referencedColumnNames="uid"
+                                 referencedTableName="items"/>
+    </changeSet>
+    <changeSet id="1727359400956-8" author="Romanov (generated)">
+        <addForeignKeyConstraint baseColumnNames="operation_uid" baseTableName="inventory_requirement"
+                                 constraintName="FK_INVENTORY_REQUIREMENT_ON_OPERATION_UID" referencedColumnNames="uid"
+                                 referencedTableName="operation"/>
+    </changeSet>
+    <changeSet id="1727359400956-9" author="Romanov (generated)">
+        <addForeignKeyConstraint baseColumnNames="employee_uid" baseTableName="operation"
+                                 constraintName="FK_OPERATION_ON_EMPLOYEE_UID" referencedColumnNames="uid"
+                                 referencedTableName="employee"/>
+    </changeSet>
+    <changeSet id="1727359400956-10" author="Romanov (generated)">
+        <addForeignKeyConstraint baseColumnNames="order_uid" baseTableName="operation"
+                                 constraintName="FK_OPERATION_ON_ORDER_UID" referencedColumnNames="uid"
+                                 referencedTableName="orders"/>
+    </changeSet>
+    <changeSet id="1727359400956-11" author="Romanov (generated)">
+        <addForeignKeyConstraint baseColumnNames="item_uid" baseTableName="warehouse"
+                                 constraintName="FK_WAREHOUSE_ON_ITEM_UID" referencedColumnNames="uid"
+                                 referencedTableName="items"/>
+    </changeSet>
+
+</databaseChangeLog>

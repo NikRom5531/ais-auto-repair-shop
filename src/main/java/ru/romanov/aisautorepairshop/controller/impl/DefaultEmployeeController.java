@@ -4,14 +4,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.romanov.aisautorepairshop.controller.EmployeeController;
+import ru.romanov.aisautorepairshop.model.dto.EmployeeDto;
 import ru.romanov.aisautorepairshop.model.entity.Employee;
 import ru.romanov.aisautorepairshop.service.EmployeeService;
-import ru.romanov.aisautorepairshop.web.mapper.EmployeeMapper;
-import ru.romanov.aisautorepairshop.web.mapper.UidMapper;
-import ru.romanov.aisautorepairshop.web.payload.AssignEmployeePositionPayload;
-import ru.romanov.aisautorepairshop.web.request.EmployeeRequest;
-import ru.romanov.aisautorepairshop.web.request.UidRequest;
-import ru.romanov.aisautorepairshop.web.request.UpdateEmployeeRequest;
 
 import java.util.List;
 
@@ -23,14 +18,14 @@ public class DefaultEmployeeController implements EmployeeController {
 
     @Override
     @PostMapping
-    public ResponseEntity<Employee> createEmployee(@RequestBody EmployeeRequest request) {
-        return ResponseEntity.status(201).body(employeeService.createEmployee(EmployeeMapper.INSTANCE.toPayload(request)));
+    public ResponseEntity<Employee> createEmployee(@RequestBody EmployeeDto request) {
+        return ResponseEntity.status(201).body(employeeService.createEmployee(request));
     }
 
     @Override
     @GetMapping("/employee")
-    public ResponseEntity<Employee> getEmployeeById(@RequestBody UidRequest request) {
-        return ResponseEntity.ok(employeeService.getEmployeeById(UidMapper.INSTANCE.toPayload(request).getUid()));
+    public ResponseEntity<Employee> getEmployeeById(@RequestBody EmployeeDto request) {
+        return ResponseEntity.ok(employeeService.getEmployeeById(request.getUid()));
     }
 
     @Override
@@ -41,15 +36,14 @@ public class DefaultEmployeeController implements EmployeeController {
 
     @Override
     @PutMapping("/employee")
-    public ResponseEntity<Employee> updateEmployee(@RequestBody UpdateEmployeeRequest request) {
-        AssignEmployeePositionPayload payload = EmployeeMapper.INSTANCE.toPayload(request);
-        return ResponseEntity.ok(employeeService.assignPositionEmployee(payload.getUid(), payload.getPosition()));
+    public ResponseEntity<Employee> updateEmployee(@RequestBody EmployeeDto request) {
+        return ResponseEntity.ok(employeeService.assignPositionEmployee(request.getUid(), request.getPosition()));
     }
 
     @Override
     @DeleteMapping
-    public ResponseEntity<Void> deleteEmployee(@RequestBody UidRequest request) {
-        employeeService.deleteEmployee(UidMapper.INSTANCE.toPayload(request).getUid());
+    public ResponseEntity<Void> deleteEmployee(@RequestBody EmployeeDto request) {
+        employeeService.deleteEmployee(request.getUid());
         return ResponseEntity.noContent().build();
     }
 }

@@ -9,12 +9,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.romanov.aisautorepairshop.controller.OperationController;
+import ru.romanov.aisautorepairshop.model.dto.OperationDto;
 import ru.romanov.aisautorepairshop.model.entity.Operation;
 import ru.romanov.aisautorepairshop.service.OperationService;
-import ru.romanov.aisautorepairshop.web.mapper.OperationMapper;
-import ru.romanov.aisautorepairshop.web.mapper.UidMapper;
-import ru.romanov.aisautorepairshop.web.request.OperationRequest;
-import ru.romanov.aisautorepairshop.web.request.UidRequest;
 
 import java.util.List;
 
@@ -27,14 +24,14 @@ public class DefaultOperationController implements OperationController {
 
     @Override
     @PostMapping
-    public ResponseEntity<Operation> createOperation(OperationRequest request) {
-        return ResponseEntity.status(201).body(operationService.createOperation(OperationMapper.INSTANCE.toPayload(request)));
+    public ResponseEntity<Operation> createOperation(OperationDto request) {
+        return ResponseEntity.status(201).body(operationService.createOperation(request));
     }
 
     @Override
     @GetMapping
-    public ResponseEntity<Operation> getOperationById(UidRequest request) {
-        return ResponseEntity.ok(operationService.getOperationById(UidMapper.INSTANCE.toPayload(request).getUid()));
+    public ResponseEntity<Operation> getOperationById(OperationDto request) {
+        return ResponseEntity.ok(operationService.getOperationById(request.getUid()));
     }
 
     @Override
@@ -45,26 +42,26 @@ public class DefaultOperationController implements OperationController {
 
     @Override
     @GetMapping("/order")
-    public List<Operation> getAllOperationsByOrderId(UidRequest request) {
-        return operationService.getAllOperationsByOrderId(UidMapper.INSTANCE.toPayload(request).getUid());
+    public List<Operation> getAllOperationsByOrderId(OperationDto request) {
+        return operationService.getAllOperationsByOrderId(request.getUid());
     }
 
     @Override
     @GetMapping("/employee")
-    public List<Operation> getAllOperationsByEmployeeId(UidRequest request) {
-        return operationService.getAllOperationsByEmployeeId(UidMapper.INSTANCE.toPayload(request).getUid());
+    public List<Operation> getAllOperationsByEmployeeId(OperationDto request) {
+        return operationService.getAllOperationsByEmployeeId(request.getUid());
     }
 
     @Override
     @PatchMapping
-    public ResponseEntity<Operation> finishedOperation(UidRequest request) {
-        return ResponseEntity.ok(operationService.finishedOperation(UidMapper.INSTANCE.toPayload(request).getUid()));
+    public ResponseEntity<Operation> finishedOperation(OperationDto request) {
+        return ResponseEntity.ok(operationService.finishedOperation(request.getUid()));
     }
 
     @Override
     @DeleteMapping
-    public ResponseEntity<Void> deleteOperation(UidRequest request) {
-        operationService.delete(UidMapper.INSTANCE.toPayload(request).getUid());
+    public ResponseEntity<Void> deleteOperation(OperationDto request) {
+        operationService.delete(request.getUid());
         return ResponseEntity.noContent().build();
     }
 }
