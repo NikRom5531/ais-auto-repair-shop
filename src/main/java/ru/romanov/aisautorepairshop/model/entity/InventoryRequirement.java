@@ -1,5 +1,6 @@
 package ru.romanov.aisautorepairshop.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,6 +30,7 @@ public class InventoryRequirement {
     private UUID uid;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "operation_uid", nullable = false)
     private Operation operation;
 

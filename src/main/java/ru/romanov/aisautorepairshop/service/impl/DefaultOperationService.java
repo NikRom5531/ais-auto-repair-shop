@@ -2,11 +2,7 @@ package ru.romanov.aisautorepairshop.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import ru.romanov.aisautorepairshop.exception.EntityNotFoundException;
 import ru.romanov.aisautorepairshop.model.dto.OperationDto;
 import ru.romanov.aisautorepairshop.model.entity.Operation;
 import ru.romanov.aisautorepairshop.model.enums.OrderStatusEnum;
@@ -82,15 +78,18 @@ public class DefaultOperationService implements OperationService {
     private void checkFinishedAllOperationByOrder(Operation operation) {
         List<Operation> operations = operationRepository.findAllByOrderUid(operation.getOrder().getUid());
         boolean allOperationsFinished = true;
-        for (Operation operation1 : operations) {
-            if (operation1.getFinished() != null && !operation1.getFinished().isBefore(LocalDateTime.now())) {
+
+        for (Operation op : operations) {
+            if (op.getFinished() == null || op.getFinished().isAfter(LocalDateTime.now())) {
                 allOperationsFinished = false;
             }
         }
+
         if (allOperationsFinished) {
             orderService.changeOrderStatus(operation.getOrder().getUid(), OrderStatusEnum.COMPLETED);
         }
     }
+
 
     @CacheEvict(value = "operations", key = "#uid", allEntries = true)
     @Override

@@ -105,14 +105,14 @@ public class DefaultWarehouseService implements WarehouseService {
     @Transactional
     public void takeRequirementItems(List<InventoryRequirementDto> requirementDtoList, Operation operation) {
         requirementDtoList.forEach(inventoryRequirementDto -> {
-            int oldQuantity = getItemQuantityByUid(inventoryRequirementDto.getItem_uid());
-            int currentQuantity = validateItemQuantity(oldQuantity - inventoryRequirementDto.getQuantity());
+            int quantity = getItemQuantityByUid(inventoryRequirementDto.getItem_uid());
+            validateItemQuantity(quantity - inventoryRequirementDto.getQuantity());
             updateQuantityItem(inventoryRequirementDto.getItem_uid(), inventoryRequirementDto.getQuantity(), false);
             requirementRepository.save(
                     InventoryRequirement.builder()
                             .operation(operation)
                             .item(getItemByUid(inventoryRequirementDto.getItem_uid()))
-                            .quantity(currentQuantity)
+                            .quantity(inventoryRequirementDto.getQuantity())
                             .build());
         });
     }

@@ -1,5 +1,6 @@
 package ru.romanov.aisautorepairshop.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,5 +36,6 @@ public class Item {
     private String partName;
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Warehouse> warehouses = new ArrayList<>();
 }
