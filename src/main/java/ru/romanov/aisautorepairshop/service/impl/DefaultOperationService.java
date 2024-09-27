@@ -74,7 +74,22 @@ public class DefaultOperationService implements OperationService {
     public Operation finishedOperation(UUID uid) {
         Operation operation = getOperationById(uid);
         operation.setFinished(LocalDateTime.now());
-        return operationRepository.save(operation);
+        operationRepository.save(operation);
+        checkFinishedAllOperationByOrder(operation);
+        return operation;
+    }
+
+    private void checkFinishedAllOperationByOrder(Operation operation) {
+        List<Operation> operations = operationRepository.findAllByOrderUid(operation.getOrder().getUid());
+        boolean allOperationsFinished = true;
+        for (Operation operation1 : operations) {
+            if (operation1.getFinished() != null && !operation1.getFinished().isBefore(LocalDateTime.now())) {
+                allOperationsFinished = false;
+            }
+        }
+        if (allOperationsFinished) {
+            orderService.changeOrderStatus(operation.getOrder().getUid(), OrderStatusEnum.COMPLETED);
+        }
     }
 
     @CacheEvict(value = "operations", key = "#uid", allEntries = true)

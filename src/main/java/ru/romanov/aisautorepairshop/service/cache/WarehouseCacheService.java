@@ -44,9 +44,14 @@ public class WarehouseCacheService {
         return partItemRepository.findAll();
     }
 
-    @Cacheable(value = "item_quantities", key = "#uid")
-    public int getItemQuantityByUid(UUID uid) {
-        return warehouseRepository.findWarehouseQuantityByItemUid(uid)
-                .orElseThrow(() -> new EntityNotFoundException("Quantity Warehouse by UID = " + uid + " not found"));
+    @Cacheable("warehouses")
+    public List<Warehouse> getAllWarehouses() {
+        return warehouseRepository.findAll();
+    }
+
+    @Cacheable(value = "item_quantities", key = "#itemUid")
+    public int getItemQuantityByUid(UUID itemUid) {
+        return warehouseRepository.findWarehouseQuantityByItemUid(itemUid)
+                .orElseThrow(() -> new EntityNotFoundException("Quantity Warehouse by UID = " + itemUid + " not found"));
     }
 }

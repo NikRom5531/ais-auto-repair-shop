@@ -10,7 +10,7 @@ import java.util.List;
 public interface EmployeeController {
     ResponseEntity<Employee> createEmployee(@RequestBody EmployeeDto request);
 
-    ResponseEntity<Employee> getEmployeeById(@RequestBody EmployeeDto request);
+    ResponseEntity<Employee> getEmployeeByUid(@RequestBody EmployeeDto request);
 
     ResponseEntity<List<Employee>> getAllEmployees();
 

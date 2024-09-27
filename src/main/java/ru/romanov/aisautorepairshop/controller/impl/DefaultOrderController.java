@@ -30,7 +30,7 @@ public class DefaultOrderController implements OrderController {
 
     @Override
     @GetMapping("/order")
-    public ResponseEntity<Order> getOrderById(@RequestBody OrderDto request) {
+    public ResponseEntity<Order> getOrderByUid(@RequestBody OrderDto request) {
         return ResponseEntity.ok(orderService.getOrderById(request.getUid()));
     }
 

@@ -2,9 +2,9 @@ package ru.romanov.aisautorepairshop.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.romanov.aisautorepairshop.exception.ItemPartFoundException;
 import ru.romanov.aisautorepairshop.model.dto.InventoryRequirementDto;
 import ru.romanov.aisautorepairshop.model.dto.ItemDto;
 import ru.romanov.aisautorepairshop.model.entity.InventoryRequirement;
@@ -33,6 +33,8 @@ public class DefaultWarehouseService implements WarehouseService {
     @Transactional
     @CacheEvict(value = { "items", "warehouses" }, allEntries = true)
     public Item addItem(ItemDto itemDto) {
+        if (itemRepository.existsByPartName(itemDto.getPartName()))
+            throw new ItemPartFoundException("Part name already exists");
         Item newItem = itemRepository.save(
                 Item.builder()
                         .partName(validateItemPartName(itemDto.getPartName()))
@@ -66,15 +68,20 @@ public class DefaultWarehouseService implements WarehouseService {
     }
 
     @Override
-    public int getItemQuantityByUid(UUID uid) {
-        return warehouseCacheService.getItemQuantityByUid(uid);
+    public List<Warehouse> getAllWarehouses() {
+        return warehouseCacheService.getAllWarehouses();
+    }
+
+    @Override
+    public int getItemQuantityByUid(UUID itemUid) {
+        return warehouseCacheService.getItemQuantityByUid(itemUid);
     }
 
     @Override
     @CacheEvict(value = { "warehouses", "item_quantities" }, allEntries = true)
-    public Item updateQuantityItem(UUID uid, int quantity, boolean isAdding) {
+    public Item updateQuantityItem(UUID itemUid, int quantity, boolean isAdding) {
         if (quantity != 0) {
-            Warehouse warehouse = getWarehouseByItemUid(uid);
+            Warehouse warehouse = getWarehouseByItemUid(itemUid);
             int validQuantity = validateItemQuantity(quantity);
             int currentQuantity = warehouse.getQuantity();
             currentQuantity += isAdding ? validQuantity : -validQuantity;
@@ -93,9 +100,9 @@ public class DefaultWarehouseService implements WarehouseService {
         itemRepository.deleteById(uid);
     }
 
+    @CacheEvict(value = { "item_quantities" }, allEntries = true)
     @Override
     @Transactional
-    @CacheEvict(value = { "item_quantities" }, allEntries = true)
     public void takeRequirementItems(List<InventoryRequirementDto> requirementDtoList, Operation operation) {
         requirementDtoList.forEach(inventoryRequirementDto -> {
             int oldQuantity = getItemQuantityByUid(inventoryRequirementDto.getItem_uid());

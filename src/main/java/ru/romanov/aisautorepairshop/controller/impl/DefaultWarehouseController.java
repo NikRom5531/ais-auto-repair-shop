@@ -10,16 +10,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.romanov.aisautorepairshop.controller.WarehouseController;
+import ru.romanov.aisautorepairshop.model.dto.InventoryRequirementDto;
 import ru.romanov.aisautorepairshop.model.dto.ItemDto;
 import ru.romanov.aisautorepairshop.model.dto.WarehouseDto;
+import ru.romanov.aisautorepairshop.model.entity.InventoryRequirement;
 import ru.romanov.aisautorepairshop.model.entity.Item;
+import ru.romanov.aisautorepairshop.model.entity.Warehouse;
 import ru.romanov.aisautorepairshop.service.WarehouseService;
 
 import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/warehouse")
+@RequestMapping("/warehouses")
 public class DefaultWarehouseController implements WarehouseController {
     private final WarehouseService warehouseService;
 
@@ -31,21 +34,46 @@ public class DefaultWarehouseController implements WarehouseController {
 
     @Override
     @GetMapping("/item")
-    public ResponseEntity<Item> getItemById(@RequestBody ItemDto itemDto) {
+    public ResponseEntity<Item> getItemByUid(@RequestBody ItemDto itemDto) {
         return ResponseEntity.ok(warehouseService.getItemByUid(itemDto.getUid()));
     }
 
     @Override
-    @GetMapping
+    @GetMapping("/items")
     public ResponseEntity<List<Item>> getAllItems() {
         List<Item> items = warehouseService.getAllItems();
         return ResponseEntity.status(items.isEmpty() ? 204 : 200).body(items);
     }
 
     @Override
+    @GetMapping
+    public ResponseEntity<List<Warehouse>> getAllWarehouses() {
+        List<Warehouse> warehouses = warehouseService.getAllWarehouses();
+        return ResponseEntity.status(warehouses.isEmpty() ? 204 : 200).body(warehouses);
+    }
+
+    @Override
+    @GetMapping("/warehouse/item")
+    public ResponseEntity<Warehouse> getWarehouseByItemUid(@RequestBody WarehouseDto warehouseDto) {
+        return ResponseEntity.ok(warehouseService.getWarehouseByItemUid(warehouseDto.getItem_uid()));
+    }
+
+    @Override
+    @GetMapping("/inventory-requirement")
+    public ResponseEntity<InventoryRequirement> getInventoryRequirementByUid(@RequestBody InventoryRequirementDto inventoryRequirementDto) {
+        return ResponseEntity.ok(warehouseService.getInventoryRequirementByUid(inventoryRequirementDto.getUid()));
+    }
+
+    @Override
+    @GetMapping("/item/quantity")
+    public ResponseEntity<Integer> getItemQuantityByUid(@RequestBody WarehouseDto warehouseDto) {
+        return ResponseEntity.ok(warehouseService.getItemQuantityByUid(warehouseDto.getItem_uid()));
+    }
+
+    @Override
     @PatchMapping("/item")
     public ResponseEntity<Item> updateQuantityItem(@RequestBody WarehouseDto warehouseDto) {
-        return ResponseEntity.ok(warehouseService.updateQuantityItem(warehouseDto.getUid(), warehouseDto.getQuantity(), warehouseDto.isAdding()));
+        return ResponseEntity.ok(warehouseService.updateQuantityItem(warehouseDto.getItem_uid(), warehouseDto.getQuantity(), warehouseDto.isAdding()));
     }
 
     @Override

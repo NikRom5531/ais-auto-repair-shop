@@ -21,6 +21,8 @@ public interface WarehouseService {
 
     List<Item> getAllItems();
 
+    List<Warehouse> getAllWarehouses();
+
     int getItemQuantityByUid(UUID uid);
 
     Item updateQuantityItem(UUID itemUid, int quantity, boolean isAdding);

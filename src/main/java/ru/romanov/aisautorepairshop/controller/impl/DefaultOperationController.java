@@ -29,7 +29,7 @@ public class DefaultOperationController implements OperationController {
 
     @Override
     @GetMapping
-    public ResponseEntity<Operation> getOperationById(OperationDto request) {
+    public ResponseEntity<Operation> getOperationByUid(OperationDto request) {
         return ResponseEntity.ok(operationService.getOperationById(request.getUid()));
     }
 
@@ -42,15 +42,15 @@ public class DefaultOperationController implements OperationController {
 
     @Override
     @GetMapping("/order")
-    public ResponseEntity<List<Operation>> getAllOperationsByOrderId(OperationDto request) {
-        List<Operation> operations = operationService.getAllOperationsByOrderId(request.getUid());
+    public ResponseEntity<List<Operation>> getAllOperationsByOrderUid(OperationDto request) {
+        List<Operation> operations = operationService.getAllOperationsByOrderId(request.getOrder_uid());
         return ResponseEntity.status(operations.isEmpty() ? 204 : 200).body(operations);
     }
 
     @Override
     @GetMapping("/employee")
-    public ResponseEntity<List<Operation>> getAllOperationsByEmployeeId(OperationDto request) {
-        List<Operation> operations = operationService.getAllOperationsByEmployeeId(request.getUid());
+    public ResponseEntity<List<Operation>> getAllOperationsByEmployeeUid(OperationDto request) {
+        List<Operation> operations = operationService.getAllOperationsByEmployeeId(request.getEmployee_uid());
         return ResponseEntity.status(operations.isEmpty() ? 204 : 200).body(operations);
     }
 

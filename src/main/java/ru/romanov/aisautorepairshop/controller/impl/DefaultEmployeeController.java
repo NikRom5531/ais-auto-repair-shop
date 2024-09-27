@@ -24,7 +24,7 @@ public class DefaultEmployeeController implements EmployeeController {
 
     @Override
     @GetMapping("/employee")
-    public ResponseEntity<Employee> getEmployeeById(@RequestBody EmployeeDto request) {
+    public ResponseEntity<Employee> getEmployeeByUid(@RequestBody EmployeeDto request) {
         return ResponseEntity.ok(employeeService.getEmployeeById(request.getUid()));
     }
 

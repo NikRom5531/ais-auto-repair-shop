@@ -10,13 +10,13 @@ import java.util.List;
 public interface OperationController {
     ResponseEntity<Operation> createOperation(@RequestBody OperationDto request);
 
-    ResponseEntity<Operation> getOperationById(@RequestBody OperationDto request);
+    ResponseEntity<Operation> getOperationByUid(@RequestBody OperationDto request);
 
     ResponseEntity<List<Operation>> getAllOperations();
 
-    ResponseEntity<List<Operation>> getAllOperationsByOrderId(@RequestBody OperationDto request);
+    ResponseEntity<List<Operation>> getAllOperationsByOrderUid(@RequestBody OperationDto request);
 
-    ResponseEntity<List<Operation>> getAllOperationsByEmployeeId(@RequestBody OperationDto request);
+    ResponseEntity<List<Operation>> getAllOperationsByEmployeeUid(@RequestBody OperationDto request);
 
     ResponseEntity<Operation> finishedOperation(@RequestBody OperationDto request);
 

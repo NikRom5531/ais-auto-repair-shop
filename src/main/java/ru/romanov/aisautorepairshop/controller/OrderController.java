@@ -7,11 +7,10 @@ import ru.romanov.aisautorepairshop.model.entity.Order;
 
 import java.util.List;
 
-
 public interface OrderController {
     ResponseEntity<Order> createOrder(@RequestBody OrderDto orderDto);
 
-    ResponseEntity<Order> getOrderById(@RequestBody OrderDto orderDto);
+    ResponseEntity<Order> getOrderByUid(@RequestBody OrderDto orderDto);
 
     ResponseEntity<List<Order>> getAllOrders();
 
