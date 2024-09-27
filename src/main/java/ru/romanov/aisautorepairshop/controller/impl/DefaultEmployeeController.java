@@ -37,7 +37,7 @@ public class DefaultEmployeeController implements EmployeeController {
 
     @Override
     @PutMapping("/employee")
-    public ResponseEntity<Employee> updateEmployee(@RequestBody EmployeeDto request) {
+    public ResponseEntity<Employee> assignPositionEmployee(@RequestBody EmployeeDto request) {
         return ResponseEntity.ok(employeeService.assignPositionEmployee(request.getUid(), request.getPosition()));
     }
 

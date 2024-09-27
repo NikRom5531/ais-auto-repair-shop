@@ -14,7 +14,7 @@ public interface EmployeeController {
 
     ResponseEntity<List<Employee>> getAllEmployees();
 
-    ResponseEntity<Employee> updateEmployee(@RequestBody EmployeeDto request);
+    ResponseEntity<Employee> assignPositionEmployee(@RequestBody EmployeeDto request);
 
     ResponseEntity<Void> deleteEmployee(@RequestBody EmployeeDto request);
 }

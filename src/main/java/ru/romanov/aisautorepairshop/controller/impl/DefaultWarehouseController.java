@@ -32,7 +32,7 @@ public class DefaultWarehouseController implements WarehouseController {
     @Override
     @GetMapping("/item")
     public ResponseEntity<Item> getItemById(@RequestBody ItemDto itemDto) {
-        return ResponseEntity.ok(warehouseService.getItemById(itemDto.getUid()));
+        return ResponseEntity.ok(warehouseService.getItemByUid(itemDto.getUid()));
     }
 
     @Override

@@ -37,9 +37,18 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatusEnum status;
 
-    @Column(name = "created", nullable = false)
+    @Column(name = "created", nullable = false, updatable = false)
     private LocalDateTime created;
 
     @Column(name = "description", nullable = false)
     private String description;
+
+    public String getDisplayNameStatus() {
+        return switch (this.status) {
+            case NEW -> "Новый";
+            case IN_PROGRESS -> "В процессе";
+            case COMPLETED -> "Завершен";
+            default -> this.status.getString();
+        };
+    }
 }

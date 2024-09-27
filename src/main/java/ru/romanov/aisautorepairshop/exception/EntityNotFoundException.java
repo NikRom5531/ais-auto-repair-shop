@@ -1,4 +1,4 @@
-package ru.romanov.aisautorepairshop.exceptions;
+package ru.romanov.aisautorepairshop.exception;
 
 import lombok.experimental.StandardException;
 import org.springframework.http.HttpStatus;
@@ -6,5 +6,5 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @StandardException
 @ResponseStatus(HttpStatus.NOT_FOUND)
-public class OperationNotFoundException extends RuntimeException {
+public class EntityNotFoundException extends RuntimeException {
 }

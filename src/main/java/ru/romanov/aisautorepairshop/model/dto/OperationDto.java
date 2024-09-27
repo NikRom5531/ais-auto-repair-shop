@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.romanov.aisautorepairshop.model.entity.Employee;
-import ru.romanov.aisautorepairshop.model.entity.Order;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,8 +20,6 @@ public class OperationDto {
     private String description;
     private LocalDateTime started;
     private LocalDateTime finished;
-    private Order order;
-    private Employee employee;
 
     private UUID order_uid;
     private UUID employee_uid;

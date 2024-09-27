@@ -1,13 +1,16 @@
 package ru.romanov.aisautorepairshop.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
-import ru.romanov.aisautorepairshop.exceptions.OrderNotFoundException;
+import ru.romanov.aisautorepairshop.exception.EntityNotFoundException;
 import ru.romanov.aisautorepairshop.model.dto.OrderDto;
 import ru.romanov.aisautorepairshop.model.entity.Order;
 import ru.romanov.aisautorepairshop.model.enums.OrderStatusEnum;
 import ru.romanov.aisautorepairshop.repository.OrderRepository;
 import ru.romanov.aisautorepairshop.service.OrderService;
+import ru.romanov.aisautorepairshop.service.cache.OrderCacheService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,7 +20,9 @@ import java.util.UUID;
 @Service
 public class DefaultOrderService implements OrderService {
     private final OrderRepository orderRepository;
+    private final OrderCacheService orderCacheService;
 
+    @CacheEvict(value = "orders", allEntries = true)
     @Override
     public Order createOrder(OrderDto orderDto) {
         return orderRepository.save(
@@ -30,21 +35,21 @@ public class DefaultOrderService implements OrderService {
     }
 
     @Override
-    public Order getOrderById(UUID orderId) {
-        return orderRepository.findById(orderId).orElseThrow(() ->
-                new OrderNotFoundException("Order not found with id: " + orderId));
+    public Order getOrderById(UUID uid) {
+        return orderCacheService.getOrderById(uid);
     }
 
     @Override
     public List<Order> getOrdersByStatus(OrderStatusEnum status) {
-        return orderRepository.findByStatus(status);
+        return orderCacheService.getOrdersByStatus(status);
     }
 
     @Override
     public List<Order> getAllOrders() {
-        return orderRepository.findAll();
+        return orderCacheService.getAllOrders();
     }
 
+    @CacheEvict(value = "orders", key = "#uid", allEntries = true)
     @Override
     public Order changeOrderStatus(UUID uid, OrderStatusEnum status) {
         Order existingOrder = getOrderById(uid);
@@ -52,8 +57,9 @@ public class DefaultOrderService implements OrderService {
         return orderRepository.save(existingOrder);
     }
 
+    @CacheEvict(value = "orders", key = "#uid", allEntries = true)
     @Override
-    public void deleteOrder(UUID orderId) {
-        orderRepository.deleteById(orderId);
+    public void deleteOrder(UUID uid) {
+        orderRepository.deleteById(uid);
     }
 }

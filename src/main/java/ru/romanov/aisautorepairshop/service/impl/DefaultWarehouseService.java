@@ -1,8 +1,10 @@
 package ru.romanov.aisautorepairshop.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
-import ru.romanov.aisautorepairshop.exceptions.ItemNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
 import ru.romanov.aisautorepairshop.model.dto.InventoryRequirementDto;
 import ru.romanov.aisautorepairshop.model.dto.ItemDto;
 import ru.romanov.aisautorepairshop.model.entity.InventoryRequirement;
@@ -13,6 +15,7 @@ import ru.romanov.aisautorepairshop.repository.InventoryRequirementRepository;
 import ru.romanov.aisautorepairshop.repository.ItemRepository;
 import ru.romanov.aisautorepairshop.repository.WarehouseRepository;
 import ru.romanov.aisautorepairshop.service.WarehouseService;
+import ru.romanov.aisautorepairshop.service.cache.WarehouseCacheService;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,13 +23,17 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Service
 public class DefaultWarehouseService implements WarehouseService {
-    private final ItemRepository partItemRepository;
+    private final ItemRepository itemRepository;
     private final WarehouseRepository warehouseRepository;
     private final InventoryRequirementRepository requirementRepository;
 
+    private final WarehouseCacheService warehouseCacheService;
+
     @Override
+    @Transactional
+    @CacheEvict(value = { "items", "warehouses" }, allEntries = true)
     public Item addItem(ItemDto itemDto) {
-        Item newItem = partItemRepository.save(
+        Item newItem = itemRepository.save(
                 Item.builder()
                         .partName(validateItemPartName(itemDto.getPartName()))
                         .build());
@@ -39,46 +46,68 @@ public class DefaultWarehouseService implements WarehouseService {
     }
 
     @Override
-    public Item getItemById(UUID uid) {
-        return partItemRepository.findById(uid)
-                .orElseThrow(() -> new ItemNotFoundException("Inventory item not found"));
+    public Item getItemByUid(UUID uid) {
+        return warehouseCacheService.getItemByUid(uid);
+    }
+
+    @Override
+    public Warehouse getWarehouseByItemUid(UUID uid) {
+        return warehouseCacheService.getWarehouseByItemUid(uid);
+    }
+
+    @Override
+    public InventoryRequirement getInventoryRequirementByUid(UUID uid) {
+        return warehouseCacheService.getInventoryRequirementByUid(uid);
     }
 
     @Override
     public List<Item> getAllItems() {
-        return partItemRepository.findAll();
+        return warehouseCacheService.getAllItems();
     }
 
+    @Override
+    public int getItemQuantityByUid(UUID uid) {
+        return warehouseCacheService.getItemQuantityByUid(uid);
+    }
 
     @Override
-    public Item updateQuantityItem(UUID itemUid, int quantity, boolean isAdding) {
+    @CacheEvict(value = { "warehouses", "item_quantities" }, allEntries = true)
+    public Item updateQuantityItem(UUID uid, int quantity, boolean isAdding) {
         if (quantity != 0) {
-            Warehouse warehouse = warehouseRepository.findByItemUid(itemUid);
+            Warehouse warehouse = getWarehouseByItemUid(uid);
             int validQuantity = validateItemQuantity(quantity);
             int currentQuantity = warehouse.getQuantity();
             currentQuantity += isAdding ? validQuantity : -validQuantity;
             warehouse.setQuantity(validateItemQuantity(currentQuantity));
             return warehouseRepository.save(warehouse).getItem();
-        } else throw new IllegalArgumentException("Invalid quantity");
+        } else throw new IllegalArgumentException("Invalid quantity = " + quantity);
     }
 
+
     @Override
+    @Transactional
+    @CacheEvict(value = { "items", "warehouses", "inventory_requirements", "item_quantities" }, key = "#uid", allEntries = true)
     public void deleteItemByUid(UUID uid) {
-//        requirementRepository.delete();
+        requirementRepository.deleteInventoryRequirementByItemUid(uid);
         warehouseRepository.deleteWarehouseByItemUid(uid);
-        partItemRepository.deleteById(uid);
+        itemRepository.deleteById(uid);
     }
 
     @Override
+    @Transactional
+    @CacheEvict(value = { "item_quantities" }, allEntries = true)
     public void takeRequirementItems(List<InventoryRequirementDto> requirementDtoList, Operation operation) {
-        for (InventoryRequirementDto inventoryRequirementDto : requirementDtoList) {
+        requirementDtoList.forEach(inventoryRequirementDto -> {
+            int oldQuantity = getItemQuantityByUid(inventoryRequirementDto.getItem_uid());
+            int currentQuantity = validateItemQuantity(oldQuantity - inventoryRequirementDto.getQuantity());
+            updateQuantityItem(inventoryRequirementDto.getItem_uid(), inventoryRequirementDto.getQuantity(), false);
             requirementRepository.save(
                     InventoryRequirement.builder()
                             .operation(operation)
-                            .item(getItemById(inventoryRequirementDto.getItem_uid()))
-                            .quantity(inventoryRequirementDto.getQuantity())
+                            .item(getItemByUid(inventoryRequirementDto.getItem_uid()))
+                            .quantity(currentQuantity)
                             .build());
-        }
+        });
     }
 
     private String validateItemPartName(String partName) {

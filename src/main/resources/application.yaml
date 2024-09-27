@@ -14,6 +14,8 @@ spring:
   liquibase:
     change-log: db/changelog/db.changelog-master.xml
     enabled: true
+  cache:
+    type: ehcache
 
 server:
   port: 8082

@@ -8,4 +8,5 @@ import java.util.UUID;
 
 @Repository
 public interface InventoryRequirementRepository extends JpaRepository<InventoryRequirement, UUID> {
+    void deleteInventoryRequirementByItemUid(UUID itemUid);
 }
